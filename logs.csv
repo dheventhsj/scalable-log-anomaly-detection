@@ -1,0 +1,20 @@
+from fastapi import FastAPI
+import pandas as pd
+import pickle
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"status":"Advanced Log Analyzer Running"}
+
+@app.get("/logs")
+def logs():
+    df = pd.read_csv("data/output.csv")
+    return df.head(50).to_dict(orient="records")
+
+@app.get("/anomalies")
+def anomalies():
+    df = pd.read_csv("data/output.csv")
+    anomalies = df[df['anomaly'] == -1]
+    return anomalies.to_dict(orient="records")
